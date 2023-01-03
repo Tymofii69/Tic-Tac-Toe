@@ -1,0 +1,97 @@
+body {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+
+#game-board {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    width: 60vmin;
+    height: 60vmin;
+}
+.cell{
+    border: 2px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* for "score" block*/
+#score {
+    display: grid;
+    color: white;
+    width: 60vmin;
+    height: 15vmin;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: 2fr, 2fr, 2fr, 1fr;
+    margin-top: 2vh;
+}
+
+label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 3.2vmin "Raleway",sans-serif; /*initially I used here 24px, but looks really bad, when you use smaller screen*/
+    font-weight: 400; 
+}
+
+#playerLbl {
+    grid-area: 1 / 1;
+}
+#tieLbl {
+    grid-area: 1 / 2;
+}
+#compLbl {
+    grid-area: 1 / 3;
+}
+#icon {
+    width: 5vmin;
+    height: 5vmin;
+}
+#iconBlock {
+    grid-area: 1 / 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+input{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4vmin;
+    color: white;
+    background-color: black;
+    border: none;
+}
+
+#playerInput {
+    grid-area: 2 / 1;
+}
+#tieInput {
+    grid-area: 2 / 2;
+}
+#computerInput {
+    grid-area: 2 / 3;
+}    
+#numberOfPlayers {
+    grid-area: 2 / 4;
+    align-items: baseline;
+}
+
+/* game mechanics */
+.cross-img {
+    width: 15vmin;
+    height: 15vmin;
+}
+
+.circle-img {
+    width: 17vmin;
+    height: 17vmin;
+}
