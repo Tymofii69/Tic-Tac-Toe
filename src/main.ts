@@ -58,68 +58,71 @@ function addClickListeners (){
     gameBoard!.addEventListener("click", function update(event) {
         let target = event.target as HTMLDivElement;
 
-        if (currentPlayer == "X"){
-            if (!target.querySelector("img") && target.nodeName !== "IMG") {
-                //adding the cross element
-                let imgCross = document.createElement("img");
-                imgCross.classList.add("cross-img");
-                imgCross.src = "./img/cross.png";
-                target.appendChild(imgCross)
-                if (checkWin()) {
+        if (!target.querySelector("img") && target.nodeName !== "IMG") {
+
+            //adding the cross element
+            placeElementOnBoard(target, "X");
+                // if (checkWin() == "Win") {
+                //     gameResult!.innerText = "You win!";
+                //     playerScore.value = (Number(playerScore.value) + 1).toString();
+                //     gameBoard.removeEventListener("click", update);
+                //     return;
+                // };
+                // if (checkWin() == "Draw") {}
+            switch (checkWin()) {
+                case "Win":
                     gameResult!.innerText = "You win!";
                     playerScore.value = (Number(playerScore.value) + 1).toString();
                     gameBoard.removeEventListener("click", update);
                     return;
-                };
-    
-                if (checkDraw()){ gameBoard.removeEventListener("click", update); return };;
-    
-                //adding the circle element
-                // My variant just to practice a bit promises (below)
-                let promise = new Promise(function(resolve, reject) {
-                    window.setTimeout(function() {
-                        let newCircleCell = document.querySelectorAll(".cell")[randomEmptyCell()];
-                        let imgCircle = document.createElement("img");
-                        imgCircle.classList.add("circle-img");
-                        imgCircle.src = "./img/circle.png";
-                        newCircleCell.appendChild(imgCircle)
-                        if (checkWin()) resolve("the player lose")
-                        else reject("the game continues")
-                    }, 1000);
-                    
-                });
-    
-                promise.then(
-                    function(resolve) {
+                case "Draw":
+                    gameResult!.innerText = "Draw!";
+                    tieScore.value = (Number(tieScore.value) + 1).toString();
+                    gameBoard.removeEventListener("click", update);
+                    console.log("draw1")
+                    return;
+            }
+
+
+            //adding the circle element
+            window.setTimeout(function() {
+                placeElementOnBoard(target, "O");
+                switch (checkWin()) {
+                    case "Lose":
                         gameResult!.innerText = "You lose!";
                         computerScore.value = (Number(computerScore.value) + 1).toString();
-                    },
-                    function(reject) {console.log(reject)},
-                )
-            
-                // ORIGINAL CODE for circle element(it's also working OK and wait for circle to appear, before considering, whether it's a Win or Lose)
-            // window.setTimeout(function() {
-            //     let newCircleCell = document.querySelectorAll(".cell")[randomEmptyCell()];
-            //     let imgCircle = document.createElement("img");
-            //     imgCircle.classList.add("circle-img");
-            //     imgCircle.src = "./img/circle.png";
-            //     newCircleCell.appendChild(imgCircle)
-            //     if (checkWin()) {
-            //         console.log("lose")
-            //     }
-            // }, 1000)
-    
-                if (checkDraw()){ gameBoard.removeEventListener("click", update) };
-            };
-        }   
+                        gameBoard.removeEventListener("click", update);
+                        return;
+                    case "Draw":
+                        gameResult!.innerText = "Draw!";
+                        tieScore.value = (Number(tieScore.value) + 1).toString();
+                        gameBoard.removeEventListener("click", update);
+                        console.log("draw2")
+                        return;
+                }    
+            }, 500)
+        };
     })
 }
 
-function placeElementOnBoard(element: string){
-    
+function placeElementOnBoard(target: HTMLDivElement, element: string){
+    switch (element){
+        case "X":
+            let imgCross = document.createElement("img");
+            imgCross.classList.add("cross-img");
+            imgCross.src = "./img/cross.png";
+            target.appendChild(imgCross);
+            break;
+        case "O":
+            let imgCircle = document.createElement("img");
+            imgCircle.classList.add("circle-img");
+            imgCircle.src = "./img/circle.png";
+            document.querySelectorAll(".cell")[randomEmptyCell()].appendChild(imgCircle);
+            break;
+    }
 }
 
-function checkWin() {
+function checkWin(): String | undefined {
     for (let i = 0; i <= 7; i++) {  //iterating through the winning patterns
         let a = winningPatterns[i][0];
         let b = winningPatterns[i][1];
@@ -135,18 +138,15 @@ function checkWin() {
                 secondWinPosition.querySelector("img")!.style.opacity = "100%";
                 thirdWinPosition.querySelector("img")!.style.opacity = "100%";
                 createButton();
-                return true;
+                console.log(firstWinPosition.firstElementChild?.getAttribute("class") == "cross-img");
+                return firstWinPosition.firstElementChild?.getAttribute("class") == "cross-img" ? "Win" : "Lose";
             }
         }
     }
-}
-
-function checkDraw() {
     if (checkRemainingEmptyCells().length == 0){
-        gameResult!.innerText = "Draw!";
-        tieScore.value = (Number(tieScore.value) + 1).toString();
+        console.log("drawWrong")
         createButton();
-        return true;
+        return "Draw";
     }
 }
 
